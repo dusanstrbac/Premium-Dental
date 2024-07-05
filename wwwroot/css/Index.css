@@ -1,0 +1,143 @@
+﻿:root {
+    --darkorange: darkorange;
+    --lightorange: orange;
+    --lightgrey: lightgrey;
+}
+/* ============================================================================== */
+/* KALENDAR */
+/* ============================================================================== */
+
+thead tr {
+    background-color: var(--darkorange);
+    font-size: 18px;
+
+}
+tbody td {
+    background-color: var(--lightgrey);
+    font-weight: 600;
+    font-size: 18px;
+}
+/* ============================================================================== */
+/* MODAL ZAKAZIVANJA PACIJENTA */
+/* ============================================================================== */
+#ZakModal .modal-header {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+#ZakModal .modal-body input {
+    border: 1px solid black;
+}
+#ZakModal .modal-body .form-group {
+    border: 1px solid black;
+    border-radius: 5px;
+}
+/* ============================================================================== */
+/* DUGMICI IZNAD KALENDARA */
+/* ============================================================================== */
+/* DUGMAD ZA BIRANJE MESECA */
+.fc .fc-button-primary { 
+    outline: none;
+    border: none;
+    color: black;
+    background-color: var(--darkorange);
+}
+.fc .fc-button-primary:hover {
+    outline: none;
+    border: none;
+    color: white;
+    background-color: var(--lightorange);
+}
+.fc .fc-button-primary:focus {
+    box-shadow: 0 0 0 0.2rem var(--darkorange);
+    outline: none;
+    border: none;
+  }
+/* Kada je dugme ugaseno */
+.fc .fc-button-primary:disabled { 
+    background-color: var(--lightorange);
+    color: white;
+}
+/* Kada se dugme klikne */
+.fc .fc-button-primary:not(:disabled):active {
+    border: none;
+    outline: none;
+    background-color: var(--lightorange);
+    color: black;
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active {
+    background-color: var(--lightorange);
+    color: white;
+    border: none;
+    outline: none;
+}
+.fc .fc-button-primary:not(:active).fc-button-active {
+    background-color: var(--lightorange);
+    color: white;
+    border: none;
+    outline: none;
+}
+.fc .fc-button-primary:not(:disabled):active:focus,
+  .fc .fc-button-primary:not(:disabled).fc-button-active:focus {
+    box-shadow: 0 0 0 0.2rem var(--lightorange);
+  }
+/* ============================================================================== */
+/* DUGME TERMINI MODAL */
+/* ============================================================================== */
+.sledeciTermin {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    margin-top: 15px;
+    position: relative;
+}
+.collapseWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 10px;
+    z-index: 5;
+    margin-bottom: 50px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+#collapseTermini {
+    border: 1px solid black;
+    border-radius: 5px;
+    outline: none;
+    z-index: 5;
+}
+.card {
+    text-align: center;
+    background-color: var(--lightgrey);
+}
+.card-title {
+    font-weight: 800;
+}
+.card-text {
+    font-weight: 500;
+}
+.prikaziKarton {
+    background-color: var(--darkorange);
+    color: black;
+    font-weight: 600;
+}
+.prikaziKarton:hover {
+    background-color: var(--lightorange);
+    color: white;
+}
+/* DUGME ZA PRIKAZIVANJE SLEDECIH TERMINA */
+#collapseButton {
+    background-color: var(--darkorange);
+    font-weight: 600;
+    font-size: 20px;
+    padding: 10px 30px;
+}
+#collapseButton:hover {
+    background-color: var(--lightorange);
+    color: white;
+}

@@ -1,0 +1,388 @@
+﻿@model Termini
+
+@{
+    ViewData["Title"] = "Home Page";
+    //List<Pacijenti> lista = ViewBag.DokLista != null ? ViewBag.DokLista : null;
+
+}
+
+<!-- MODAL ZAKAZIVANJA TERMINA-->
+
+<head>
+    <meta charset='utf-8' />
+    <link href="~/fullcalendar-5.10.1/lib/main.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/Index.css" />
+
+    <script src="~/fullcalendar-5.10.1/lib/main.js"></script>
+    <script src="~/fullcalendar-5.10.1/lib/locales/sr.js"></script>
+    <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+     
+    <script>
+
+        var DataPath = '@(Url.Action("GetTermin4Terminal", "Home"))';
+        var ZakDataPath = '@(Url.Action("Zakazi", "Home"))';
+        var OtkDataPath = '@(Url.Action("Otkazi", "Home"))';
+        var AzuDataPath= '@(Url.Action("Azuriraj", "Home"))';
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+           
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: 'sr',
+                //plugins: [ googleCalendarPlugin ],
+                googleCalendarApiKey: 'AIzaSyDVXbq4ATKPlF_zGdUvG0neiMsMAhtvg7E',
+                initialView: 'dayGridMonth',
+                businessHours: true,
+                headerToolbar:
+
+                {
+                    start: 'title', // will normally be on the left. if RTL, will be on the right
+                    center: '',
+                    end: 'dayGridMonth today prev,next' // will normally be on the right. if RTL, will be on the left
+                },
+
+                slotMinTime: "08:00:00",
+                selectable: true,
+                slotDuration: '00:10:00',
+                slotLabelInterval: '00:05',
+                timeZone: 'local',
+                allDaySlot: false,
+                nowIndicator: true,
+                eventDisplay: 'block',
+                eventOverlap: false,
+                height: 'auto',
+
+                slotLabelFormat: {
+                    hour: 'numeric',
+                    minute: '2-digit',
+
+                    meridiem: 'short',
+                    hour12: false,
+
+                },
+                businessHours: {
+                    // days of week. an array of zero-based day of week integers (0=Sunday)
+                    daysOfWeek: [1, 2, 3, 4, 5, 6], // Monday - Thursday
+
+                    startTime: '08:00', // a start time (10am in this example)
+                    endTime: '22:00', // an end time (6pm in this example)
+                },
+                //eventTimeFormat: {
+                //    hour: 'numeric',
+                //    minute: '2-digit',
+
+                //    meridiem: 'short',
+                //    hour12: false
+                //},
+                eventSources: [
+                    {
+                        url: DataPath
+                    },
+                        {// use the `url` property
+                         googleCalendarId: 'officedragonsoft@gmail.com',
+                          className: 'nice-event'
+                    }
+                ],
+                dateClick: function (dateClickInfo) {
+                    if (dateClickInfo.view.type == "dayGridMonth") {
+                        calendar.changeView('timeGridDay');
+
+                        calendar.gotoDate(dateClickInfo.dateStr);
+                        return;
+                    };
+                    var DatOD = moment(dateClickInfo.dateStr).format("YYYY-MM-DD hh:mm");
+
+                    $('#ZakModal').modal('show');
+                    //$('#Otkazi').modal('hide');
+                    //$('#Azuriraj').modal('hide');
+                    $("#VremeOd").val(DatOD);
+
+                },
+                eventMouseEnter: function (mouseEnterInfo) {
+
+                },
+                eventMouseLeave: function (mouseEnterInfo) {
+
+                },
+                eventClick: function (info) {
+                    if (info.view.type == "dayGridMonth") {
+
+                        return;
+                    };
+                    var pocetak = moment(info.event.extendedProps.vremeOD).format("hh:mm");
+                    var kraj = moment(info.event.extendedProps.vremeDO).format("hh:mm");;
+                    var datum = moment(info.event.extendedProps.vremeOD).format("DD.MM.YYYY");
+
+
+
+                    $('#ZakModal').modal('show');
+                    $("#Ime").val(info.event.extendedProps.ime);
+                    $("#Prezime").val(info.event.extendedProps.prezime);
+                    $("#VremeOd").val(pocetak);
+                    $("#VremeDo").val(kraj);
+                    $("#Doktor").val(info.event.extendedProps.doktor);
+                    $("#Usluga").val(info.event.extendedProps.usluga);
+                    $("#Napomena").val(info.event.extendedProps.napomena);
+                    $("#Docek").val(info.event.extendedProps.docek);
+                    $("#Smestaj").val(info.event.extendedProps.smestaj);
+                    $("#Email").val(info.event.extendedProps.mail);
+                    $("#Telefon").val(info.event.extendedProps.tel);
+                    $("#idtermina").text(info.event.extendedProps.idd);
+                    $("#datumtermina").text(datum);
+                    //$('#Otkazi').modal('show');
+                    //$('#Azuriraj').modal('show');
+                    //$('#Zakazi').modal('hide');
+
+                }
+
+            });
+            calendar.render();
+            $('#Zakazi').on('click', function (e) {
+                var doo = $("#VremeDo").val();
+
+                $.ajax({
+                    url: ZakDataPath,
+                    type: "POST",
+                    data: { Ime: $("#Ime").val(), Prezime: $("#Prezime").val(), VremeOd: $("#VremeOd").val(), VremeDo: doo, Doktor: $("#Doktor").val(), Usluga: $("#Usluga").val(), Napomena: $("#Napomena").val(), Docek: $("#Docek").val(), Smestaj: $("#Smestaj").val(), Email: $("#Email").val(), Telefon: $("#Telefon").val() },
+                    success: function (res) {
+
+
+
+
+                        $('#ZakModal').modal('hide');
+                       /* alert(res);*/
+                        calendar.refetchEvents();
+
+                    },
+                    error: function () {
+                        alert("Greška!!!");
+                    }
+                });
+            });
+
+            $('#Otkazi').on('click', function (e) {
+
+                $.ajax({
+                    url: OtkDataPath,
+                    type: "POST",
+                    data: { idd: $("#idtermina").text()},
+                    success: function (res) {
+
+
+
+
+                        $('#ZakModal').modal('hide');
+                         alert(res);
+                        calendar.refetchEvents();
+
+                    },
+                    error: function () {
+                        alert("Greška!!!");
+                    }
+                });
+            });
+            $('#Azuriraj').on('click', function (e) {
+
+                var datum = $("#datumtermina").text();
+                $.ajax({
+                    url: AzuDataPath,
+                    type: "POST",
+                    data: { idd: $("#idtermina").text(), Ime: $("#Ime").val(), datum: $("#datumtermina").text(), Prezime: $("#Prezime").val(), VremeOd: $("#VremeOd").val(), VremeDo: $("#VremeDo").val(), Doktor: $("#Doktor").val(), Usluga: $("#Usluga").val(), Napomena: $("#Napomena").val(), Docek: $("#Docek").val(), Smestaj: $("#Smestaj").val(), Email: $("#Email").val(), Telefon: $("#Telefon").val() },
+                    success: function (res) {
+
+
+
+
+                        $('#ZakModal').modal('hide');
+                        /* alert(res);*/
+                        calendar.refetchEvents();
+
+                    },
+                    error: function  (jqxhr, status, exception) {
+                    alert('Exception:', exception);
+                    }
+                });
+            });
+        });
+
+    </script>
+</head>
+
+<div class="modal fade" id="ZakModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 id="idtermina" class="modal-title"></h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <h5 id="datumtermina" class="modal-title"></h5>
+                                    </div>
+                                </div>
+                -->
+                <div class="row">
+                    <div class="col">
+                        <h4 class="modal-title">Zakazivanje termina</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col button">
+                        <button type="button" class="close" id="zatvori" data-dismiss="modal">&times;</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                @using (Html.BeginForm("Zakazi", "Home", FormMethod.Post))
+                {
+                    <fieldset>
+                        <div class="row">
+                            <div class="col-lg-2">Ime</div>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(m => m.Ime, new { @Value = "Ime", @class = "form-control", @id = "Ime" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2">Prezime</div>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(m => m.Prezime, new { @Value = "Prezime", @class = "form-control", @id = "Prezime" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2">OD</div>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(m => m.VremeOd, new { @Value = "Od", @class = "form-control", @id = "VremeOd" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2">DO</div>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(m => m.VremeDo, new { @Value = "Do", @class = "form-control", @id = "VremeDo", placeholder = "Trajanje u minutima" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2">Doktor</div>
+                            <div class="col-lg-10">
+                                <div class="form-group">
+
+                                    <select asp-for="Doktor" class="form-control" id="Doktor">
+                                        <option value="1">Nemanja Savkovic</option>
+                                        <option value="2">Mladen Rakus</option>
+
+                                    </select>
+                                    <span asp-validation-for="Doktor" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2">Usluga</div>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(m => m.Usluga, new { @Value = "Usluga", @class = "form-control", @id = "Usluga" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2">Napomena</div>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(m => m.Napomena, new { @Value = "Napomena", @class = "form-control", @id = "Napomena" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2">Doček</div>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(m => m.Docek, new { @Value = "Docek", @class = "form-control", @id = "Docek" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2">Smeštaj</div>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(m => m.Smestaj, new { @Value = "Smestaj", @class = "form-control", @id = "Smestaj" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2">Email</div>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(m => m.Email, new { @Value = "Email korisnika", @class = "form-control", @id = "Email" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2">Telefon</div>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(m => m.Telefon, new { @Value = "Telefon", @class = "form-control", @id = "telefon" })
+                            </div>
+                        </div>
+
+                        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+                        <div class="modal-footer">
+                            <div class="row">
+                                <div class="col">
+                                    <button type="button" id="Zakazi" class="btn btn-success">Zakaži</button>
+                                </div>
+                                <div class="col">
+                                    <button type="button" id="Otkazi" class="btn btn-danger">Otkaži</button>
+                                </div>
+                                <div class="col">
+                                    <button type="button" id="Azuriraj" class="btn btn-primary">Ažuriraj</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                }
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<body>
+    <div id='calendar'></div>
+
+<!-- DUGME PREDSTOJECIH TERMINA -->
+    <div class="sledeciTermin">
+
+        <div class="collapseWrapper">
+            <div class="collapse" id="collapseTermini">
+            <div class="card" style="width:18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Dušan Štrbac</h5>
+                    <p class="card-text">Zakazano vreme: 15:00</p>
+                    <button type="button" class="btn prikaziKarton">Prikazi karton</button>
+                </div>
+            </div>
+        </div>
+
+            <div class="collapse" id="collapseTermini">
+                <div class="card" style="width:18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Dušan Štrbac</h5>
+                        <p class="card-text">Zakazano vreme: 15:00</p>
+                        <button type="button" class="btn prikaziKarton">Prikazi karton</button>
+                    </div>
+                </div>
+            </div>
+            <div class="collapse" id="collapseTermini">
+                <div class="card" style="width:18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Dušan Štrbac</h5>
+                        <p class="card-text">Zakazano vreme: 15:00</p>
+                        <button type="button" class="btn prikaziKarton">Prikazi karton</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="btn" id="collapseButton" type="button" data-toggle="collapse" data-target="#collapseTermini" aria-expanded="false" aria-controls="collapseTermini">
+            Termini
+        </button>
+
+    </div>
+</body>

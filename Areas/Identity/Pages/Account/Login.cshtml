@@ -1,0 +1,64 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<head>
+    <meta charset='utf-8' />
+    <link rel="stylesheet" href="~/css/LoginPage.css" />
+</head>
+
+<div class="row">
+
+    <div class="Titles">
+        <h1>@ViewData["Title"]</h1>
+        <h4>Unesite podatke da biste se ulogovali</h4>
+    </div>
+    <div class="LoginSection">
+        
+        <section>
+            <form id="account" method="post">
+
+                <!-- PROVERITI DA LI OVO MOZE DA SE OBRISE AKO NEMA POENTU -->
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <!----------------------------------------------------------->
+                <div class="Email-Group">
+                    <label asp-for="Input.Email"></label>
+                    <input asp-for="Input.Email" class="email" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="Password-Group">
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" class="password" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group saveforgot">
+
+                    <div class="checkbox remember">
+                        <label asp-for="Input.RememberMe">
+                            <input asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
+                    </div>
+
+                    <div class="forgotpass">
+                        <a href="#">Zaboravili ste lozinku?</a>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn logovanje">Log in</button>
+                </div>
+
+            </form>
+        </section>
+    </div>
+    
+    <img id="pozadinaFotka" src="~/ordinacija-slika.jpg" />
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

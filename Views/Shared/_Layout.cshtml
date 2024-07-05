@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PremiumDental </title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
+<body>
+
+    <style>
+        background-color: #302CFF;
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-header .button {
+            position: absolute;
+            top: 21px;
+            right: 40px;
+        }
+
+        .modal .row {
+            display: flex;
+        }
+
+        .karton {
+            display: none;
+        }
+
+    </style>
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a href="@Url.Action("Index", "Home")" class="navbar-brand logo">
+                    <img src="~/Logo/crown-dental-logo-final-12-01-1.png" title="title" style="width:200px;height:100px;" alt="additional title" />
+                </a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item tabhome">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item tabkarton">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Karton">Karton</a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item novkorisnik">
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Novi korisnik</a>
+                            </li>
+                        }
+                        <li class="nav-item karton">
+                            <a class="nav-link text-dark" id="DugmeKreiranja" asp-area="Karton" data-toggle="modal" data-target="#KreirajKarton">KreirajKarton</a>
+                        </li>
+
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Modal ZA KREIRANJE KARTONA -->
+    <div class="modal fade" id="KreirajKarton" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row">
+                        <div class="col">
+                            <h4 class="modal-title">Kreiranje kartona</h4>
+                        </div>
+                    </div>
+                    <div class="row button">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="row">
+                            <div class="col-lg-5">Pol</div>
+                            <div class="col-lg-7">
+                                <input type="type" name="name" value="" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Ime</div>
+                            <div class="col-lg-7">
+                                <input type="type" name="name" value="" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Prezime</div>
+                            <div class="col-lg-7">
+                                <input type="type" name="name" value="" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Datum Rodjenja</div>
+                            <div class="col-lg-7">
+                                <input type="type" name="name" value="" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Grad</div>
+                            <div class="col-lg-7">
+                                <input type="type" name="name" value="" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Adresa</div>
+                            <div class="col-lg-7">
+                                <input type="type" name="name" value="" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Telefon</div>
+                            <div class="col-lg-7">
+                                <input type="type" name="name" value="" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Lični dokument</div>
+                            <div class="col-lg-7">
+                                <input type="type" name="name" value="" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">JMBG</div>
+                            <div class="col-lg-7">
+                                <input type="type" name="name" value="" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Broj Kartona</div>
+                            <div class="col-lg-7">
+                                <input type="type" name="name" value="" />
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Kreiraj</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Otkazi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - PremiumDental - <a asp-area="" asp-controller="Home" asp-action="dragon-soft.net">DragonSoft</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+  
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

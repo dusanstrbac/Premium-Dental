@@ -1,0 +1,217 @@
+﻿:root {
+    --darkorange: darkorange;
+    --lightorange: orange;
+}
+
+
+/* NAVIGACIJA */
+.tabhome {
+    display: none;
+}
+.tabkarton {
+    display: none;
+}
+.navbar-brand img {
+    width: 700px;
+    height: auto;
+}
+.navbar {
+    z-index: 10;
+}
+/* BACKGROUND IMAGE */
+
+#pozadinaFotka {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    opacity: .5;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+
+/* TITLOVI */
+.Titles {
+    z-index: 10;
+}
+
+.Titles h1,
+.Titles h4 {
+    font-weight: 800;
+    color: black;
+}
+/* SEKCIJA INPUTA ZA LOGOVANJE NALOGA */
+.LoginSection {
+    z-index: 10; /* Stavljeno da ne bi background fotografija isla na isti indeks */
+}
+
+.row {
+    width: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+form {    
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+
+/* SEKCIJA INPUTA ZA LOGOVANJE */
+.Email-Group,
+.Password-Group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.Email-Group label,
+.Password-Group label {
+    color: black;
+    font-weight: 500;
+    font-size: 20px;
+}
+.Email-Group input,
+.Password-Group input {
+    width: 300px;
+    height: 40px;
+    padding-left: 5px;
+    background-color: lightblue;
+    outline: none;
+    border: 2px solid black;
+    border-radius: 5px;
+    font-weight: 400;
+    font-size: 16px;
+}
+.Email-Group input:focus,
+.Email-Group input:active,
+.Password-Group input:focus,
+.Password-Group input:active {
+    border: 2px solid black;
+    outline: none;
+    background-color: lightblue;
+    font-size: 16px;
+}
+/* SEGMENT SAVE I FORGOT */
+.remember input:hover {
+    cursor: pointer;
+}
+.saveforgot {
+    display: flex;
+    gap: 15px;
+}
+.forgotpass a {
+    font-size: 16px;
+}
+/* DUGME LOG IN */
+.form-group button {
+    width: 200px;
+    height: 40px;
+    border-radius: 10px;
+    margin-left: 40px;
+    background-color: var(--darkorange);
+    border: none;
+    color: black;
+    font-weight: 600;
+    font-size: 18px;
+}
+.form-group button:hover {
+    background-color: var(--lightorange);
+}
+
+/* MEDIA SCREENOVI */
+@media only screen and ( min-width: 2560px ) {
+    h1 {
+        font-size: 100px;
+    }
+    h4 {
+        font-size: 50px;
+    }
+    .Email-Group input,
+    .Password-Group input {
+        width: 800px;
+        height: 80px;
+        font-size: 30px;
+    }
+    .Email-Group label,
+    .Password-Group label {
+        font-size: 60px;
+    }
+    .Email-Group,
+    .Password-Group {
+        gap: 20px;
+    }
+    .saveforgot {
+        width: 72%;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .checkbox label {
+        font-size: 40px;
+    }
+    .checkbox input {
+        width: 40px;
+        height: 40px;
+    }
+    .forgotpass a {
+        font-size: 40px;
+    }
+    .form-group button {
+        width: 700px;
+        height: 80px;
+        font-size: 40px;
+    }
+
+}
+
+    @media only screen and ( max-width: 768px ) {
+        .row {
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Promeniti na samom footer style-u */
+        footer {
+            text-align: center;
+        }
+    }
+
+    @media only screen and ( max-width: 425px ) {
+        h4 {
+            font-size: 20px;
+        }
+
+        .saveforgot {
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 5px;
+        }
+    }
+
+    @media only screen and ( max-width: 320px ) {
+        h4 {
+            font-size: 16px;
+        }
+
+        .Email-Group input,
+        .Password-Group input {
+            width: 250px;
+            height: 40px;
+            padding-left: 5px;
+            background-color: lightblue;
+            outline: none;
+        }
+
+        form {
+            align-items: center;
+        }
+
+        .form-group button {
+            margin: 0;
+        }
+    }

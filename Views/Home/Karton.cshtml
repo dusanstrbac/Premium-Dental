@@ -1,0 +1,1368 @@
+﻿@using Microsoft.Extensions.FileProviders
+
+
+@model Pacijenti
+@{
+    ViewData["Title"] = "Karton";
+    List<Pacijenti> lista = ViewBag.lista != null ? ViewBag.lista : null;
+    List<IFileInfo> snimci = ViewBag.snimci;
+
+
+}
+<head>
+    <link rel="stylesheet" href="~/css/Karton.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+    <link href="~/lib/datatables/css/dataTables.bootstrap4.css" rel="stylesheet" />
+</head>
+
+<style>
+    .modal-body .row input {
+        border: 1px solid black;
+    }
+    .modal .row {
+        align-items: center;
+        background-color: white;
+    }
+</style>
+
+<body>
+
+    <!--KREIRANJE STOMATOLOSKOG KARTONA-->
+    <div class="modal fade" id="KreirajKarton" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row">
+                        <div class="col">
+                            <h4 class="modal-title">Kreiranje kartona</h4>
+                        </div>
+                    </div>
+                    <div class="row button">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="row">
+                            <div class="col-lg-5">Pol</div>
+                            <div class="col-lg-7">
+                                @Html.TextBoxFor(m => m.Pol, new { @Value = "Pol", @class = "form-control", @id = "Pol" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Ime</div>
+                            <div class="col-lg-7 input">
+                                @Html.TextBoxFor(m => m.Ime, new { @Value = "Ime", @class = "form-control", @id = "Ime" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Prezime</div>
+                            <div class="col-lg-7">
+                                @Html.TextBoxFor(m => m.Prezime, new { @Value = "Prezime", @class = "form-control", @id = "Prezime" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Datum Rodjenja</div>
+                            <div class="col-lg-7">
+                                @Html.TextBoxFor(m => m.DatumRodjenja, new { @Value = "DatumRodjenja", @class = "form-control", @id = "DatumRodjenja" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Grad</div>
+                            <div class="col-lg-7">
+                                @Html.TextBoxFor(m => m.Grad, new { @Value = "Grad", @class = "form-control", @id = "Grad" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Adresa</div>
+                            <div class="col-lg-7">
+                                @Html.TextBoxFor(m => m.Adresa, new { @Value = "Adresa", @class = "form-control", @id = "Adresa" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Telefon</div>
+                            <div class="col-lg-7">
+                                @Html.TextBoxFor(m => m.Telefon, new { @Value = "Telefon", @class = "form-control", @id = "Telefon" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Lični dokument</div>
+                            <div class="col-lg-7">
+                                @Html.TextBoxFor(m => m.LicniDokument, new { @Value = "LicniDokument", @class = "form-control", @id = "LicniDokument" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">JMBG</div>
+                            <div class="col-lg-7">
+                                @Html.TextBoxFor(m => m.Jmbg, new { @Value = "Jmbg", @class = "form-control", @id = "Jmbg" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">Broj Kartona</div>
+                            <div class="col-lg-7">
+                                @Html.TextBoxFor(m => m.BrojKartona, new { @Value = "BrojKartona", @class = "form-control", @id = "BrojKartona" })
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Kreiraj</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Otkazi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--TABELA SA STOMATOLOSKIM KARTONIMA-->
+    <div class="parent">
+        <div class="div1">
+            <div style="width:90%; margin-bottom:0px">
+                <table id="pactable" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Ime</th>
+                            <th scope="col">Prezime</th>
+                            <th scope="col">BrojKartona</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Adresa</th>
+                            <th scope="col">Telefon</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Pacijenti pacijenti in lista)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => pacijenti.Id)</td>
+                                <td>@Html.DisplayFor(modelItem => pacijenti.Ime)</td>
+                                <td>@Html.DisplayFor(modelItem => pacijenti.Prezime)</td>
+                                <td>@Html.DisplayFor(modelItem => pacijenti.BrojKartona)</td>
+                                <td>@Html.DisplayFor(modelItem => pacijenti.Email)</td>
+                                <td>@Html.DisplayFor(modelItem => pacijenti.Adresa)</td>
+                                <td>@Html.DisplayFor(modelItem => pacijenti.Telefon)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="div2">
+        <form method="post" asp-controller="Home" asp-action="PrikaziKarton">
+            <div class="form-group">
+                <input name="id" id="mojid" class="form-control" style="display:none" />
+                <input type="submit" value="Prikazi Karton" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+
+    <!-- FORMA ZA KREIRANJE KARTONA PACIJENTA -->
+
+    <form method="post" asp-controller="Pacijentis" asp-action="Create" model="Pacijentis" enctype="multipart/form-data"> 
+
+        <!--STOMATOLOSKI KARTON PACIJENTA-->
+
+        <div class="InfoKartona">
+
+            <h3>STOMATOLOŠKI KARTON PACIJENTA</h3>
+
+            <div class="InfoSegment">
+                <!-- BROJ KARTONA -->
+                <div class="Segment"> 
+                    <label asp-for="BrojKartona">Broj Kartona</label>
+                    <input asp-for="BrojKartona"/>
+                </div>
+                <!-- IME PACIJENTA -->
+                <div class="Segment">
+                    <label for="Ime">Ime</label>
+                    <input asp-for="Ime" />
+                </div>
+                <!-- PREZIME PACIJENTA -->
+                <div class="Segment">
+                    <label for="Prezime">Prezime</label>
+                    <input asp-for="Prezime" />
+                </div>
+                <!-- MOBILNI TELEFON -->
+                <div class="Segment">
+                    <label for="Telefon">Telefon</label>
+                    <input asp-for="Telefon" />
+                </div>
+                <!-- ZNAK UPOZORENJA -->
+                <div class="Segment">
+                    <label for="ZnakUpozorenja">Znak upozorenja</label>
+                    <input asp-for="ZnakUpozorenja" />
+                </div>
+                <!-- DATUM RODJENJA PACIJENTA -->
+                <div class="Segment">
+                    <label for="DatumRodjenja">Datum rodjenja</label>
+                    <input asp-for="DatumRodjenja" />
+                </div>
+                <!-- POL PACIJENTA -->
+                <div class="Segment">
+                    <label for="Pol">Pol</label>
+                    <input asp-for="Pol" />
+                </div>
+                <!-- STATUS PACIJENTA -->
+                <div class="Segment">
+                    <label for="Status">Status</label>
+                    <input asp-for="Status" />
+                </div>
+                <!-- LICNI DOKUMENT PACIJENTA -->
+                <div class="Segment">
+                    <label for="infodokument">Lični dokument</label>
+                    <input type="number" name="infodokument" readonly />
+                </div>
+                <!-- JMBG -->
+                <div class="Segment">
+                    <label for="JMBG">JMBG</label>
+                    <input asp-for="Jmbg" />
+                </div>
+                <!-- ADRESA PACIJENTA -->
+                <div class="Segment">
+                    <label for="Adresa">Adresa</label>
+                    <input asp-for="Adresa" />
+                </div>
+                <!-- GRAD PACIJENTA -->
+                <div class="Segment">
+                    <label for="Grad">Grad</label>
+                    <input asp-for="Grad" />
+                </div>
+            </div>
+        </div>
+
+        <!--LEGENDA ZUBA-->
+
+        <div class="legendaZuba">
+            <h5 style="text-align:center; font-size: 25px; font-weight: 800;">LEGENDA</h5>
+            <p style="text-align:center; font-weight:bold;">Klinkni na boju ili ikonicu ispod termina i primenite na zub</p>
+            <div class="legenda">
+
+                <div class="legendaOsnova">
+
+                    <div class="col-sm">
+                        <h6>Karijes I stepena</h6>
+                        <div class="kockica kocka" style="background-color:dimgray"></div>
+                    </div>
+
+                    <div class="col-sm">
+                        <h6>Karijes II stepena</h6>
+                        <div class="kockica kocka" style="background-color:black;"></div>
+                    </div>
+
+                    <div class="col-sm">
+                        <h6>Zub u nicanju - koren</h6>
+                        <div class="kockica kocka" style="background-color:orange;"></div>
+                    </div>
+
+                    <div class="col-sm">
+                        <h6>Pulpitis zuba - koren</h6>
+                        <div class="kockica kocka" style="background-color:red;"></div>
+                    </div>
+
+                    <div class="col-sm">
+                        <h6>Gangrena pulpe - koren</h6>
+                        <div class="kockica kocka" style="background-color:darkviolet;"></div>
+                    </div>
+
+                    <div class="col-sm">
+                        <h6>Periodontitis - koren</h6>
+                        <div class="kockica kocka" style="background-color:blue;"></div>
+                    </div>
+
+                    <div class="col-sm">
+                        <h6>Frakturiran zub  - koren</h6>
+                        <div class="kockica kocka" style="background-color:chartreuse;"></div>
+                    </div>
+
+                    <div class="col-sm">
+                        <h6>Sekundarni karijes - ceo zub</h6>
+                        <div class="kockica kocka" style="background-color:yellow;"></div>
+                    </div>
+
+                    <div class="col-sm">
+                        <h6>Plomba - deo zuba</h6>
+                        <div class="kockica kocka" style="background-color:palegoldenrod;"></div>
+                    </div>
+
+                    <div class="col-sm">
+                        <h6>Zub u lečenju - koren</h6>
+                        <div class="kockica kocka" style="background-color:pink;"></div>
+                    </div>
+
+                    <div class="col-sm">
+                        <h6>Izlečen zub - koren</h6>
+                        <div class="kockica kocka" style="background-color:antiquewhite;"></div>
+                    </div>
+        
+                </div>
+
+                <div class="legendaDodaci">
+                    <div class="col-sm" id="izvadjen">
+                        <h6>Izvadjen zub </h6>
+                        <i class="fa fa-times fa-2x" aria-hidden="true"></i>
+                    </div>
+
+                    <div class="col-sm" id="krunica">
+                        <h6>Krunica</h6>
+                        <i class="fa fa-solid fa-crown fa-2x"></i>
+                    </div>
+
+                    <div class="col-sm" id="impl">
+                        <h6>Implant </h6>
+                        <i class="fa fa-info fa-2x" aria-hidden="true"></i>
+                    </div>
+
+                    <div class="col-sm" id="proteza">
+                        <h6>Proteza</h6>
+                        <i class="fa fa-link fa-2x" aria-hidden="true"></i>
+                    </div>
+
+                    <div class="col-sm" id="ponisti">
+                        <h6>Ponisti</h6>
+                        <i class="fa fa-ban fa-2x" aria-hidden="true"></i>
+                    </div>
+
+                    <div class="col-sm" id="ponistikoren">
+                        <h6>Ponisti Koren</h6>
+                        <i class="fa fa-ban fa-2x" aria-hidden="true"></i>
+                    </div>
+        
+                </div>
+
+            </div>
+        </div>
+
+        <!--ZUBI-->
+        <h4 style="text-align:center;margin-top:30px">Zatečeno stanje</h4>
+
+        <div class="zameni">
+            @if (@TempData["Karton"] != null)
+            {
+                @Html.Raw(@TempData["Karton"]);
+            }
+            else
+            {
+                <div class="div9">
+                    <div class="zubi">
+                        <div class='square' id="pzub1">
+                            <div class="top" id="p11"></div>
+                            <div class="right" id="p12"></div>
+                            <div class="bottom" id="p13"></div>
+                            <div class="left" id="p14"></div>
+                            <div class="middle" id="p15"></div>
+                        </div>
+                        <div class='square' id="pzub2">
+                            <div class="top" id="p21"></div>
+                            <div class="right" id="p22"></div>
+                            <div class="bottom" id="p23"></div>
+                            <div class="left" id="p24"></div>
+                            <div class="middle" id="p25"></div>
+                        </div>
+                        <div class='square' id="pzub3">
+                            <div class="top" id="p31"></div>
+                            <div class="right" id="p32"></div>
+                            <div class="bottom" id="p33"></div>
+                            <div class="left" id="p34"></div>
+                            <div class="middle" id="p35"></div>
+                        </div>
+                        <div class='square' id="pzub4">
+                            <div class="top" id="p41"></div>
+                            <div class="right" id="p42"></div>
+                            <div class="bottom" id="p43"></div>
+                            <div class="left" id="p44"></div>
+                            <div class="middle" id="p45"></div>
+                        </div>
+                        <div class='square' id="pzub5">
+                            <div class="top" id="p51"></div>
+                            <div class="right" id="p52"></div>
+                            <div class="bottom" id="p53"></div>
+                            <div class="left" id="p54"></div>
+                            <div class="middle" id="p55"></div>
+                        </div>
+                        <div class='square' id="pzub6">
+                            <div class="top" id="p61"></div>
+                            <div class="right" id="p62"></div>
+                            <div class="bottom" id="p63"></div>
+                            <div class="left" id="p64"></div>
+                            <div class="middle" id="p65"></div>
+                        </div>
+                        <div class='square' id="pzub7">
+                            <div class="top" id="p71"></div>
+                            <div class="right" id="p72"></div>
+                            <div class="bottom" id="p73"></div>
+                            <div class="left" id="p74"></div>
+                            <div class="middle" id="p75"></div>
+                        </div>
+                        <div class='square' id="pzub8">
+                            <div class="top" id="p81"></div>
+                            <div class="right" id="p82"></div>
+                            <div class="bottom" id="p83"></div>
+                            <div class="left" id="p84"></div>
+                            <div class="middle" id="p85"></div>
+                        </div>
+                        <div class='square' id="pzub9">
+                            <div class="top" id="p91"></div>
+                            <div class="right" id="p92"></div>
+                            <div class="bottom" id="p93"></div>
+                            <div class="left" id="p94"></div>
+                            <div class="middle" id="p95"></div>
+                        </div>
+                        <div class='square' id="pzub10">
+                            <div class="top" id="p101"></div>
+                            <div class="right" id="p102"></div>
+                            <div class="bottom" id="p103"></div>
+                            <div class="left" id="p104"></div>
+                            <div class="middle" id="p105"></div>
+                        </div>
+                        <div class='square' id="pzub11">
+                            <div class="top" id="p111"></div>
+                            <div class="right" id="p112"></div>
+                            <div class="bottom" id="p113"></div>
+                            <div class="left" id="p114"></div>
+                            <div class="middle" id="p115"></div>
+                        </div>
+                        <div class='square' id="pzub12">
+                            <div class="top" id="p121"></div>
+                            <div class="right" id="p122"></div>
+                            <div class="bottom" id="p123"></div>
+                            <div class="left" id="p124"></div>
+                            <div class="middle" id="p125"></div>
+                        </div>
+                        <div class='square' id="pzub13">
+                            <div class="top" id="p131"></div>
+                            <div class="right" id="p132"></div>
+                            <div class="bottom" id="p133"></div>
+                            <div class="left" id="p134"></div>
+                            <div class="middle" id="p135"></div>
+                        </div>
+                        <div class='square' id="pzub14">
+                            <div class="top" id="p141"></div>
+                            <div class="right" id="p142"></div>
+                            <div class="bottom" id="p143"></div>
+                            <div class="left" id="p144"></div>
+                            <div class="middle" id="p145"></div>
+                        </div>
+                        <div class='square' id="pzub15">
+                            <div class="top" id="p151"></div>
+                            <div class="right" id="p152"></div>
+                            <div class="bottom" id="p153"></div>
+                            <div class="left" id="p154"></div>
+                            <div class="middle" id="p155"></div>
+                        </div>
+                        <div class='square' id="pzub16">
+                            <div class="top" id="p161"></div>
+                            <div class="right" id="p162"></div>
+                            <div class="bottom" id="p163"></div>
+                            <div class="left" id="p164"></div>
+                            <div class="middle" id="p165"></div>
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor1"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor2"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor3"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor4"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor5"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor6"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor7"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor8"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor9"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor10"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor11"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor12"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor13"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor14"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor15"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor16"></div>
+
+                        </div>
+                    </div>
+                    <div class="zubi" style="margin-top:-30px">
+                        <div class='square' id="pzub17">
+                            <div class="top" id="p211"></div>
+                            <div class="right" id="p212"></div>
+                            <div class="bottom" id="p213"></div>
+                            <div class="left" id="p214"></div>
+                            <div class="middle" id="p215"></div>
+                        </div>
+                        <div class='square' id="pzub18">
+                            <div class="top" id="p221"></div>
+                            <div class="right" id="p222"></div>
+                            <div class="bottom" id="p223"></div>
+                            <div class="left" id="p224"></div>
+                            <div class="middle" id="p225"></div>
+                        </div>
+                        <div class='square' id="pzub19">
+                            <div class="top" id="p231"></div>
+                            <div class="right" id="p232"></div>
+                            <div class="bottom" id="p233"></div>
+                            <div class="left" id="p234"></div>
+                            <div class="middle" id="p235"></div>
+                        </div>
+                        <div class='square' id="pzub20">
+                            <div class="top" id="p241"></div>
+                            <div class="right" id="p242"></div>
+                            <div class="bottom" id="p243"></div>
+                            <div class="left" id="p244"></div>
+                            <div class="middle" id="p245"></div>
+                        </div>
+                        <div class='square' id="pzub21">
+                            <div class="top" id="p251"></div>
+                            <div class="right" id="p252"></div>
+                            <div class="bottom" id="p253"></div>
+                            <div class="left" id="p254"></div>
+                            <div class="middle" id="p255"></div>
+                        </div>
+                        <div class='square' id="pzub22">
+                            <div class="top" id="p261"></div>
+                            <div class="right" id="p262"></div>
+                            <div class="bottom" id="p263"></div>
+                            <div class="left" id="p264"></div>
+                            <div class="middle" id="p265"></div>
+                        </div>
+                        <div class='square' id="pzub23">
+                            <div class="top" id="p271"></div>
+                            <div class="right" id="p272"></div>
+                            <div class="bottom" id="p273"></div>
+                            <div class="left" id="p274"></div>
+                            <div class="middle" id="p275"></div>
+                        </div>
+                        <div class='square' id="pzub24">
+                            <div class="top" id="p281"></div>
+                            <div class="right" id="p282"></div>
+                            <div class="bottom" id="p283"></div>
+                            <div class="left" id="p284"></div>
+                            <div class="middle" id="p285"></div>
+                        </div>
+                        <div class='square' id="pzub25">
+                            <div class="top" id="p291"></div>
+                            <div class="right" id="p292"></div>
+                            <div class="bottom" id="p293"></div>
+                            <div class="left" id="p294"></div>
+                            <div class="middle" id="p295"></div>
+                        </div>
+                        <div class='square' id="pzub26">
+                            <div class="top" id="p2101"></div>
+                            <div class="right" id="p2102"></div>
+                            <div class="bottom" id="p2103"></div>
+                            <div class="left" id="p2104"></div>
+                            <div class="middle" id="p2105"></div>
+                        </div>
+                        <div class='square' id="pzub27">
+                            <div class="top" id="p2111"></div>
+                            <div class="right" id="p2112"></div>
+                            <div class="bottom" id="p2113"></div>
+                            <div class="left" id="p2114"></div>
+                            <div class="middle" id="p2115"></div>
+                        </div>
+                        <div class='square' id="pzub28">
+                            <div class="top" id="p2121"></div>
+                            <div class="right" id="p2122"></div>
+                            <div class="bottom" id="p2123"></div>
+                            <div class="left" id="p2124"></div>
+                            <div class="middle" id="p2125"></div>
+                        </div>
+                        <div class='square' id="pzub29">
+                            <div class="top" id="p2131"></div>
+                            <div class="right" id="p2132"></div>
+                            <div class="bottom" id="p2133"></div>
+                            <div class="left" id="p2134"></div>
+                            <div class="middle" id="p2135"></div>
+                        </div>
+                        <div class='square' id="pzub30">
+                            <div class="top" id="p2141"></div>
+                            <div class="right" id="p2142"></div>
+                            <div class="bottom" id="p2143"></div>
+                            <div class="left" id="p2144"></div>
+                            <div class="middle" id="p2145"></div>
+                        </div>
+                        <div class='square' id="pzub31">
+                            <div class="top" id="p2151"></div>
+                            <div class="right" id="p2152"></div>
+                            <div class="bottom" id="p2153"></div>
+                            <div class="left" id="p2154"></div>
+                            <div class="middle" id="p2155"></div>
+                        </div>
+                        <div class='square' id="pzub32">
+                            <div class="top" id="p2161"></div>
+                            <div class="right" id="p2162"></div>
+                            <div class="bottom" id="p2163"></div>
+                            <div class="left" id="p2164"></div>
+                            <div class="middle" id="p2165"></div>
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor17"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor18"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor19"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor20"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor21"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor22"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor23"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor24"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor25"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor26"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor27"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor28"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="29"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor30"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor31"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="kor32"></div>
+
+                        </div>
+                    </div>
+                    <h4 style="text-align:center;margin-top:-30px">Trenutno stanje</h4>
+                    <div class="zubi">
+                        <div class='square' id="szub1">
+                            <div class="top" id="s11"></div>
+                            <div class="right" id="s12"></div>
+                            <div class="bottom" id="s13"></div>
+                            <div class="left" id="s14"></div>
+                            <div class="middle" id="s15"></div>
+                        </div>
+                        <div class='square' id="szub2">
+                            <div class="top" id="s21"></div>
+                            <div class="right" id="s22"></div>
+                            <div class="bottom" id="s23"></div>
+                            <div class="left" id="s24"></div>
+                            <div class="middle" id="s25"></div>
+                        </div>
+                        <div class='square' id="szub3">
+                            <div class="top" id="s31"></div>
+                            <div class="right" id="s32"></div>
+                            <div class="bottom" id="s33"></div>
+                            <div class="left" id="s34"></div>
+                            <div class="middle" id="s35"></div>
+                        </div>
+                        <div class='square' id="szub4">
+                            <div class="top" id="s41"></div>
+                            <div class="right" id="s42"></div>
+                            <div class="bottom" id="s43"></div>
+                            <div class="left" id="s44"></div>
+                            <div class="middle" id="s45"></div>
+                        </div>
+                        <div class='square' id="szub5">
+                            <div class="top" id="s51"></div>
+                            <div class="right" id="s52"></div>
+                            <div class="bottom" id="s53"></div>
+                            <div class="left" id="s54"></div>
+                            <div class="middle" id="s55"></div>
+                        </div>
+                        <div class='square' id="szub6">
+                            <div class="top" id="s61"></div>
+                            <div class="right" id="s62"></div>
+                            <div class="bottom" id="s63"></div>
+                            <div class="left" id="s64"></div>
+                            <div class="middle" id="s65"></div>
+                        </div>
+                        <div class='square' id="szub7">
+                            <div class="top" id="s71"></div>
+                            <div class="right" id="s72"></div>
+                            <div class="bottom" id="s73"></div>
+                            <div class="left" id="s74"></div>
+                            <div class="middle" id="s75"></div>
+                        </div>
+                        <div class='square' id="szub8">
+                            <div class="top" id="s81"></div>
+                            <div class="right" id="s82"></div>
+                            <div class="bottom" id="s83"></div>
+                            <div class="left" id="s84"></div>
+                            <div class="middle" id="s85"></div>
+                        </div>
+                        <div class='square' id="szub9">
+                            <div class="top" id="s91"></div>
+                            <div class="right" id="s92"></div>
+                            <div class="bottom" id="s93"></div>
+                            <div class="left" id="s94"></div>
+                            <div class="middle" id="s95"></div>
+                        </div>
+                        <div class='square' id="szub10">
+                            <div class="top" id="s101"></div>
+                            <div class="right" id="s102"></div>
+                            <div class="bottom" id="s103"></div>
+                            <div class="left" id="s104"></div>
+                            <div class="middle" id="s105"></div>
+                        </div>
+                        <div class='square' id="szub11">
+                            <div class="top" id="s111"></div>
+                            <div class="right" id="s112"></div>
+                            <div class="bottom" id="s113"></div>
+                            <div class="left" id="s114"></div>
+                            <div class="middle" id="s115"></div>
+                        </div>
+                        <div class='square' id="szub12">
+                            <div class="top" id="s121"></div>
+                            <div class="right" id="s122"></div>
+                            <div class="bottom" id="s123"></div>
+                            <div class="left" id="s124"></div>
+                            <div class="middle" id="s125"></div>
+                        </div>
+                        <div class='square' id="szub13">
+                            <div class="top" id="s131"></div>
+                            <div class="right" id="s132"></div>
+                            <div class="bottom" id="s133"></div>
+                            <div class="left" id="s134"></div>
+                            <div class="middle" id="s135"></div>
+                        </div>
+                        <div class='square' id="szub14">
+                            <div class="top" id="s141"></div>
+                            <div class="right" id="s142"></div>
+                            <div class="bottom" id="s143"></div>
+                            <div class="left" id="s144"></div>
+                            <div class="middle" id="s145"></div>
+                        </div>
+                        <div class='square' id="szub15">
+                            <div class="top" id="s151"></div>
+                            <div class="right" id="s152"></div>
+                            <div class="bottom" id="s153"></div>
+                            <div class="left" id="s154"></div>
+                            <div class="middle" id="s155"></div>
+                        </div>
+                        <div class='square' id="szub16">
+                            <div class="top" id="s161"></div>
+                            <div class="right" id="s162"></div>
+                            <div class="bottom" id="s163"></div>
+                            <div class="left" id="s164"></div>
+                            <div class="middle" id="s165"></div>
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor1"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor2"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor3"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor4"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor5"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor6"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor7"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor8"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor9"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor10"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor11"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor12"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor13"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor14"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor15"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor16"></div>
+
+                        </div>
+                    </div>
+                    <div class="zubi" style="margin-top:-30px">
+                        <div class='square' id="szub17">
+                            <div class="top" id="s211"></div>
+                            <div class="right" id="s212"></div>
+                            <div class="bottom" id="s213"></div>
+                            <div class="left" id="s214"></div>
+                            <div class="middle" id="s215"></div>
+                        </div>
+                        <div class='square' id="szub18">
+                            <div class="top" id="s221"></div>
+                            <div class="right" id="s222"></div>
+                            <div class="bottom" id="s223"></div>
+                            <div class="left" id="s224"></div>
+                            <div class="middle" id="s225"></div>
+                        </div>
+                        <div class='square' id="szub19">
+                            <div class="top" id="s231"></div>
+                            <div class="right" id="s232"></div>
+                            <div class="bottom" id="s233"></div>
+                            <div class="left" id="s234"></div>
+                            <div class="middle" id="s235"></div>
+                        </div>
+                        <div class='square' id="szub20">
+                            <div class="top" id="s241"></div>
+                            <div class="right" id="s242"></div>
+                            <div class="bottom" id="s243"></div>
+                            <div class="left" id="s244"></div>
+                            <div class="middle" id="s245"></div>
+                        </div>
+                        <div class='square' id="szub21">
+                            <div class="top" id="s251"></div>
+                            <div class="right" id="s252"></div>
+                            <div class="bottom" id="s253"></div>
+                            <div class="left" id="s254"></div>
+                            <div class="middle" id="s255"></div>
+                        </div>
+                        <div class='square' id="szub22">
+                            <div class="top" id="s261"></div>
+                            <div class="right" id="s262"></div>
+                            <div class="bottom" id="s263"></div>
+                            <div class="left" id="s264"></div>
+                            <div class="middle" id="s265"></div>
+                        </div>
+                        <div class='square' id="szub23">
+                            <div class="top" id="s271"></div>
+                            <div class="right" id="s272"></div>
+                            <div class="bottom" id="s273"></div>
+                            <div class="left" id="s274"></div>
+                            <div class="middle" id="s275"></div>
+                        </div>
+                        <div class='square' id="szub24">
+                            <div class="top" id="s281"></div>
+                            <div class="right" id="s282"></div>
+                            <div class="bottom" id="s283"></div>
+                            <div class="left" id="s284"></div>
+                            <div class="middle" id="s285"></div>
+                        </div>
+                        <div class='square' id="szub25">
+                            <div class="top" id="s291"></div>
+                            <div class="right" id="s292"></div>
+                            <div class="bottom" id="s293"></div>
+                            <div class="left" id="s294"></div>
+                            <div class="middle" id="s295"></div>
+                        </div>
+                        <div class='square' id="szub26">
+                            <div class="top" id="s2101"></div>
+                            <div class="right" id="s2102"></div>
+                            <div class="bottom" id="s2103"></div>
+                            <div class="left" id="s2104"></div>
+                            <div class="middle" id="s2105"></div>
+                        </div>
+                        <div class='square' id="szub27">
+                            <div class="top" id="s2111"></div>
+                            <div class="right" id="s2112"></div>
+                            <div class="bottom" id="s2113"></div>
+                            <div class="left" id="s2114"></div>
+                            <div class="middle" id="s2115"></div>
+                        </div>
+                        <div class='square' id="szub28">
+                            <div class="top" id="s2121"></div>
+                            <div class="right" id="s2122"></div>
+                            <div class="bottom" id="s2123"></div>
+                            <div class="left" id="s2124"></div>
+                            <div class="middle" id="s2125"></div>
+                        </div>
+                        <div class='square' id="szub29">
+                            <div class="top" id="s2131"></div>
+                            <div class="right" id="s2132"></div>
+                            <div class="bottom" id="s2133"></div>
+                            <div class="left" id="s2134"></div>
+                            <div class="middle" id="s2135"></div>
+                        </div>
+                        <div class='square' id="szub30">
+                            <div class="top" id="s2141"></div>
+                            <div class="right" id="s2142"></div>
+                            <div class="bottom" id="s2143"></div>
+                            <div class="left" id="s2144"></div>
+                            <div class="middle" id="s2145"></div>
+                        </div>
+                        <div class='square' id="szub31">
+                            <div class="top" id="s2151"></div>
+                            <div class="right" id="s2152"></div>
+                            <div class="bottom" id="s2153"></div>
+                            <div class="left" id="s2154"></div>
+                            <div class="middle" id="s2155"></div>
+                        </div>
+                        <div class='square' id="szub32">
+                            <div class="top" id="s2161"></div>
+                            <div class="right" id="s2162"></div>
+                            <div class="bottom" id="s2163"></div>
+                            <div class="left" id="s2164"></div>
+                            <div class="middle" id="s2165"></div>
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor17"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor18"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor19"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor20"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor21"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor22"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor23"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor24"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor25"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor26"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor27"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor28"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor29"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor30"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor31"></div>
+
+                        </div>
+                        <div class='koren'>
+                            <div class="top" id="skor32"></div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div id="inputFormRow">
+                                <div class="input-group mb-3" id="stavke">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+         
+            }
+        </div>  
+        
+        <hr/>
+        <hr/>
+        
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="inputFormRow">
+                    <div class="input-group mb-3">                            
+                        <input type="date" name="title[]" id="datum" class="form-control m-input daj" placeholder="Datum" autocomplete="off" style="width:15%;">
+                        <input type="text" name="title[]" id="zubzapis" class="form-control m-input daj" placeholder="Zub" autocomplete="off" style="width:10%;">
+                        <input type="text" name="title[]" id="usluga" class="form-control m-input daj" placeholder="Vrsta usluge dijagnoza" autocomplete="off" style="width:60%;">
+                        <input type="text" name="title[]"  class="form-control m-input daj" placeholder="Potpis" autocomplete="off" style="width:10%;">
+                                                
+                        <div class="input-group-append">
+                            <button id="addRow" type="button" class="btn btn-info dodaj">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                                     
+        <div class="row">
+            <h5>SNIMAK ZUBA</h5>
+            <div class="col-lg-12">
+                
+                <div class="form-group">
+                    <label asp-for="Snimak" class="control-label"></label>
+                    <input asp-for="file" class="form-control"  />
+                    <span asp-validation-for="file" class="text-danger"></span>
+                </div>
+                
+                <div class="col-lg-12">
+                    @if(snimci != null){
+                    @foreach (var snimak in snimci)
+                    {  
+                        <a href="/@ViewBag.folder/@snimak.Name" target="_blank"><img src="/@ViewBag.folder/@snimak.Name" width="200" height="200" /> </a>
+                    }
+                             } 
+                </div>
+                   
+            </div>
+        </div>
+
+        <hr>
+        <hr>
+
+       <div class="SaveUpdate">
+
+           <div class="section save">
+               <button type="button">Sacuvaj</button>
+           </div>
+
+           <div class="section update">
+               <button type="button">Update</button>
+           </div>
+
+       </div>
+    </form>
+    
+</body>
+
+@section Scripts  {
+
+   
+    <script src="~/lib/datatables/js/jquery.dataTables.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.js"></script>
+    <script src="~/js/pacijenti.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+    <script src="~/js/kartonmodal.js"></script>
+
+
+}
+<script>
+    $(document).ready(function () {
+        var boja;
+        var implant;
+        var krunica;
+        var izvadjen;
+        var proteza;
+        var ponisti;
+        var ponistikoren;
+        $(".zubi").click(function (event) {
+
+            var kliknuto = event.target.id;
+            if (implant) {
+                var count = $("#" + kliknuto).closest(".square").prop('id');
+                $("#" + count).html('');
+                var slovo = count.substr(0, 1);
+                var broj = count.substr(4, count.length);
+                var mojid;
+                if (slovo == "s") {
+                    mojid = "skor" + broj;
+                }
+                else {
+                    mojid ="kor"+ broj;
+                }
+                $("#" + mojid).closest(".koren").css("text-align", "center");
+                $("#" + mojid).closest(".koren").attr("id", mojid);
+                $("#" + mojid).html('<i class="fa fa-info fa-2x" id="' + mojid + '"  style="text-aling:center" aria-hidden="true"></i>');
+                return;
+            }
+            if (krunica) {
+                var count = $("#" + kliknuto).closest(".square").prop('id');
+                $("#" + count).css("text-align", "center");
+                $("#" + count).attr("id", count);
+                $("#" + count).html('<i class="fa-solid fa-crown fa-2x"></i>');
+
+                return;
+            }
+            if (izvadjen) {
+                var count = $("#" + kliknuto).closest(".square").prop('id');
+                $("#" + count).css("text-align", "center");
+               /* $("#" + count).attr("id", count);*/
+                $("#" + count).html('<i class="fa fa-times fa-2x" aria-hidden="true"></i>');
+                //var slovo = count.substr(0, 1);
+                //var broj = count.substr(4, count.length);
+                //var mojid;
+                //if (slovo == "s") {
+                //    mojid = "skor" + broj;
+                //}
+                //else {
+                //    mojid = "kor" + broj;
+                //}
+                //$("#" + mojid).closest(".koren").css("text-align", "center");
+                ////$("#" + mojid).closest(".koren").attr("id", count);
+                //$("#" + mojid).html('<i class="fa fa-times fa-2x" aria-hidden="true"></i>');
+                return;
+            }
+            if (proteza) {
+                var count = $("#" + kliknuto).closest(".square").prop('id');
+               
+                $("#" + count).attr("id", count);
+                $("#" + count).css("text-align", "center");
+                $("#" + count).css("padding", "10px");
+                $("#" + count).html('<i class="fa fa-link fa-2x" aria-hidden="true"></i>');
+
+                return;
+            }
+            if (ponisti) {
+                var count = $("#" + kliknuto).closest(".square").prop('id');                 
+                                                       
+                            
+                var slovo = count.substr(0, 1);
+                var broj = count.substr(4, count.length);
+                var idzuba = slovo + broj;
+                var mojid;
+                if (slovo == "s") {
+                    mojid = "skor" + broj;
+                }
+                else {
+                    mojid = "kor" + broj;
+                }
+
+                $("#" + count).html('<div class="top" id="' + idzuba + '1"></div> <div class="right" id="' + idzuba + '2"></div><div class="bottom" id="' + idzuba + '3"></div><div class="left" id="' + idzuba + '4"></div><div class="middle" id="' + idzuba + '5"></div>');
+                $("#" + count).removeAttr('style');
+              
+              
+
+              
+                
+                return;
+            }
+            if (ponistikoren) {
+                /*var count = $("#" + kliknuto).closest(".square").prop('id');*/
+
+
+                //var slovo = kliknuto.substr(0, 1);
+                //var broj = kliknuto.substr(4, count.length);
+                //var idzuba = slovo + broj;
+                //var mojid;
+                //if (slovo == "s") {
+                //    mojid = "skor" + broj;
+                //}
+                //else {
+                //    mojid = "kor" + broj;
+                //}
+             
+
+
+
+
+                $("#" + kliknuto).replaceWith('<div class="koren" ><div class="top" id="' + mojid + '"></div></div>');
+
+                return;
+            }
+            $('#' + kliknuto).css("background-color", boja);
+          
+        });
+
+      
+        $(".kocka").click(function (event) {
+           
+            boja = $(this).css("background-color");
+
+            implant = false;
+            krunica = false;
+            izvadjen = false;
+            proteza = false;
+            ponisti = false;
+            ponistikoren = false;
+        });
+        $("#snimi").click(function (event) {
+            var sadrzaj = $(".zameni").html();
+            $("#sadrzaj").val(sadrzaj);
+        });
+        $("#azuriraj").click(function (event) {
+            var sadrzaj = $(".zameni").html();
+            $("#sadrzaj").val(sadrzaj);
+        });
+        $("#prikazi").click(function (event) {
+            var sadrzaj = $(".zameni").html();
+            $("#sadrzaj").val(sadrzaj);
+        });
+        $('#pactable tr').click(function () {
+
+            $("#pactable tr").each(function () {
+                $(this).removeClass("active");
+            });
+         
+            var values = $(this).find('td').map(function () {
+                return $(this).text();
+            }).get();
+           
+            var mojbroj = values[0];
+            $("#mojid").val(mojbroj);
+            $(this).toggleClass("active");
+        });
+        $("#addRow").click(function () {
+            var dat = $("#datum").val();
+            var zub = $("#zubzapis").val();
+            var usl = $("#usluga").val();
+            var html = "";
+            html += '<input type="text" value='+dat+' class="form-control m-input daj"  style="width:15%;">';
+            html += '<input type="text" value='+zub+' name="title[]" class="form-control m-input daj" placeholder="Zub" autocomplete="off" style="width:10%;">';
+            html += '<input type="text" value='+usl+' name="title[]" class="form-control m-input daj" placeholder="Vrsta usluge dijagnoza" autocomplete="off" style="width:60%;">';
+            html += '<input type="text" name="title[]" class="form-control m-input daj" placeholder="Potpis" autocomplete="off" style="width:10%;">';
+          
+            $("#stavke").append(html);
+          
+           
+        });
+        $("#impl").click(function () {
+            implant = true;
+           
+            krunica = false;
+            izvadjen = false;
+            proteza = false;
+            ponisti = false;
+            ponistikoren = false;
+        });
+        $("#krunica").click(function () {
+            krunica = true;
+            implant = false;
+           
+            izvadjen = false;
+            proteza = false;
+            ponisti = false;
+            ponistikoren = false;
+        });
+        $("#izvadjen").click(function () {
+            izvadjen = true;
+            implant = false;
+            krunica = false;
+            ponistikoren = false;
+            proteza = false;
+            ponisti = false;
+        });
+        $("#proteza").click(function () {
+            proteza = true;
+            implant = false;
+            krunica = false;
+            izvadjen = false;
+            ponistikoren = false;
+            ponisti = false;
+        });
+        $("#ponisti").click(function () {
+            ponisti = true;
+            implant = false;
+            krunica = false;
+            izvadjen = false;
+            proteza = false;
+            ponistikoren = false;
+        });
+        $("#ponistikoren").click(function () {
+            ponisti = false;
+            implant = false;
+            krunica = false;
+            izvadjen = false;
+            proteza = false;
+            ponistikoren = true;
+        });
+    });
+</script>

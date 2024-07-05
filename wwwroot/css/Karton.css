@@ -1,0 +1,327 @@
+﻿:root {
+    --darkorange: darkorange;
+    --lightorange: orange;
+    --darkgreen: rgb(0,100,0);
+    --lightgreen: rgb(0,128,0);
+    --lightgrey: lightgrey;
+}
+
+/* ============================================================================== */
+/* NA NAVIGACIJI DUGME KOJE SE SAMO POJAVLJUJE KADA JE OSOBA NA TABU KARTONA */
+/* ============================================================================== */
+.karton {
+    display: inline-block;
+}
+.novkorisnik {
+    display: none;
+}
+#createButton { 
+    margin: 5px 0 10px;
+}
+/* ============================================================================== */
+/* MODAL ZA KREIRANJE KARTONA PACIJENTA */
+/* ============================================================================== */
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-header .button {
+    position: absolute;
+    top: 21px;
+    right: 40px;
+}
+
+/* ============================================================================== */
+/* BAZA PODATAKA */
+/* ============================================================================== */
+thead th {
+    background-color: var(--darkorange);
+}
+tbody td {
+    background-color: var(--lightgrey);
+    cursor: pointer;
+}
+table tbody td {
+    font-weight: 600;
+}
+table tbody tr:hover {
+    background-color: orange;
+    cursor: pointer;
+}
+
+table tr.active {
+    color: var(--darkorange);
+    background-color: orange;
+}
+
+
+/* ============================================================================== */
+/* STOMATOLOSKI KARTON PACIJENTA */
+/* ============================================================================== */
+.InfoKartona {
+    padding: 30px;
+    border: none;
+    outline: none;
+}
+.InfoKartona h3 {
+    text-align: center;
+    font-weight: 800;
+}
+.InfoSegment {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    grid-row-gap: 20px;
+}
+.Segment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.Segment input {
+    text-align: center;
+    font-weight: 500;
+}
+.Segment {
+    font-weight: 600;
+}
+/* ============================================================================== */
+/* LEGENDA ZUBA */
+/* ============================================================================== */
+.legendaZuba {
+    background-color: var(--lightgrey);
+    outline: none;
+    margin: 0;
+}
+.legenda {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+}
+.legendaOsnova {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    grid-row-gap: 10px;
+}
+.legendaDodaci {
+    display: flex;
+    align-items: center;
+}
+.legendaDodaci .fa {
+    cursor: pointer;
+}
+/* ============================================================================== */
+/* BUTTONI NA DNU STRANICE */
+/* ============================================================================== */
+.SaveUpdate {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    padding: 10px 30px;
+}
+.SaveUpdate .section button {
+    width: 120px;
+    height: 40px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}
+.SaveUpdate .save button {
+    background-color: darkorange;
+    color: white;
+}
+.SaveUpdate .save button:hover {
+    background-color: var(--lightorange);
+}
+.SaveUpdate .update button {
+    background-color: var(--darkgreen);
+    color: white;
+}
+.SaveUpdate .update button:hover {
+    background-color: var(--lightgreen);
+}
+/* ============================================================================== */
+/* ZUBI */
+/* ============================================================================== */
+.top,
+.left,
+.right,
+.bottom {
+    border: 1px solid grey;
+}
+
+.square {
+    border: 2px solid grey;
+}
+
+.middle {
+    border: 2px solid grey;
+}
+
+.kockica:hover {
+    border: 2px solid var(--darkorange);
+    cursor: pointer;
+}
+
+.kockica {
+    width: 20px;
+    height: 20px;
+    border: none;  
+}
+
+.col-sm {
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.hidden {
+    /* The menu is hidden at first */
+    display: none;
+}
+
+.parent {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* grid-template-rows: 1fr repeat(4, 0.2fr) repeat(5, 1fr);*/
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.div1 {
+    grid-area: 1 / 1 / 2 / 4;
+}
+
+.div2 {
+    grid-area: 2 / 3 / 3 / 4;
+}
+
+.div3 {
+    grid-area: 3 / 1 / 4 / 2;
+}
+
+.div4 {
+    grid-area: 3 / 3 / 4 / 4;
+}
+
+.div5 {
+    grid-area: 4 / 1 / 5 / 4;
+}
+
+.div6 {
+    grid-area: 5 / 1 / 6 / 2;
+}
+
+.div7 {
+    grid-area: 5 / 3 / 6 / 4;
+}
+
+.div8 {
+    grid-area: 6 / 1 / 7 / 4;
+}
+
+.div9 {
+    grid-area: 7 / 1 / 8 / 4;
+}
+
+.div10 {
+    grid-area: 8 / 1 / 9 / 4;
+}
+
+.div11 {
+    grid-area: 9 / 1 / 10 / 4;
+}
+
+.div12 {
+    grid-area: 10 / 1 / 11 / 4;
+}
+
+.zubi {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px 1px;
+    grid-auto-flow: row;
+    grid-template-areas:
+        ". . . . . . . . . . . . . . . ."
+        ". . . . . . . . . . . . . . . .";
+    height: 187px;
+}
+
+.square {
+    position: relative;
+    height: 60px;
+    width: 60px;
+    overflow: hidden;
+    transition: all 1s;
+}
+
+.koren {
+    position: relative;
+    height: 60px;
+    width: 60px;
+    overflow: hidden;
+    transition: all 1s;
+    margin-top: -20px;
+}
+
+.top,
+.left,
+.right,
+.bottom {
+    position: absolute;
+    height: calc(100% / 1.414);
+    width: calc(100% / 1.414);
+    top: 50%;
+    left: 50%;
+    transform-origin: 0% 0%;
+}
+
+.right {
+    transform: rotate(-45deg);
+}
+
+.bottom {
+    transform: rotate(45deg);
+}
+
+.top {
+    transform: rotate(-135deg);
+}
+
+.left {
+    transform: rotate(135deg);
+}
+
+.square > div:hover {
+    background: var(--darkorange);
+}
+
+.koren > div:hover {
+    background: var(--darkorange);
+}
+
+.middle {
+    position: relative;
+    height: 20px;
+    width: 20px;
+    overflow: hidden;
+    margin-top: 18px;
+    margin-left: 18px;
+    background-color: white;
+}
